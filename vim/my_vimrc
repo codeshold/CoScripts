@@ -1,0 +1,141 @@
+set nocompatible
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
+behave mswin
+
+" Use Vim settings, rather then Vi Settings(much better!)
+" This is be first, because it change other options as a side effect
+set nocompatible
+
+" Enable syntax highlight
+syntax on
+
+" Minimal number of screen  lines to keep above and below the cursor.
+set scrolloff=999
+
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let eq = ''
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      let cmd = '""' . $VIMRUNTIME . '\diff"'
+      let eq = '"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+endfunction
+
+
+
+" Syntax on
+
+" Tabs should be converted to a group of 4 spaces.
+" This is the official Python convention
+" I didn't find a good reason to not to use it everywhere.
+set shiftwidth=4
+set tabstop=4
+set expandtab
+set smarttab
+" set softtabstop=4
+
+" Use UTF-8
+set encoding=utf-8
+
+" Minimal number of screen lines to keep above and below the cursor
+" set scrolloff=999
+
+" Automatically indent when adding a curly bracket, etc.
+set smartindent
+
+" Status line
+set laststatus=2
+set statusline=
+set statusline+=%-3.3n\     " buffer number
+set statusline+=%f\         " filename
+set statusline+=%h%m%r%w    " status flags
+set statusline+=\[%{strlen(&ft)?&ft:'none'}]    " file type
+set statusline+=%=          " right align remainder
+set statusline+=0x%-8B      " character value
+set statusline+=%-14(%l,%c%V%)                   " line, character set statusline+=%<%P        " file position
+
+" To insert timestamp, press F3
+nmap <F3> a<C-R>=strftime("%Y-%m-%d %H:%M")<CR><Esc>
+imap <F3> <C-R>=strftime("%Y-%m-%d %H:%M")<CR>
+nmap <F2> a<C-R>=strftime("%Y-%m-%d")<CR><Esc>
+imap <F2> <C-R>=strftime("%Y-%m-%d")<CR>
+
+" Search as you type
+" set incsearch
+
+" Ignore case when searching
+set ignorecase
+set smartcase
+
+" Show autocomplete menus
+set wildmenu
+
+" Show editing mode
+set showmode
+
+" Error bells are displayed visually.
+set visualbell
+
+
+" Size of GVim window
+set lines=55 columns=99
+
+" Don't display the menu or toolbar. Just the screen
+set guioptions-=m
+set guioptions-=T
+
+" Font. Very important
+if has('win32') || has('win64')
+    " Set guifront=Monaco:h16
+    set guifont=Consolas:h12:cANSI
+    " set guifont=Courier_new:h15:w7:cANSI
+elseif has('unix')
+    let &guifont="Monospace 10"
+endif
+
+" show number
+" set number
+
+" set color scheme that I like
+if has("gui_running")
+    colorscheme desert
+else
+    colorscheme darkblue
+endif
+
+" for jekyll *.md
+auto BufNewFile 2016*.md exec ":call JekyllMDHeader()"
+func JekyllMDHeader()
+    " set encoding=utf-8
+    call setline(1, "---")
+    call append(1, "title: ")
+    call append(2, "layout: post")
+    call append(3, "author: WenfengShi")
+    call append(4, "category: 技术")
+    call append(5, "tags: []")
+    call append(6, "---")
+endfunc
+
+" Maximize the gvim initial window
+au GUIEnter * simalt ~x
+
+" set relativenumber
+set relativenumber
+
