@@ -52,7 +52,7 @@ set smarttab
 " set softtabstop=4
 
 " Use UTF-8
-set encoding=utf-8
+" set encoding=utf-8
 
 " Minimal number of screen lines to keep above and below the cursor
 " set scrolloff=999
@@ -111,7 +111,7 @@ elseif has('unix')
 endif
 
 " show number
-" set number
+set number
 
 " set color scheme that I like
 if has("gui_running")
@@ -121,21 +121,40 @@ else
 endif
 
 " for jekyll *.md
-auto BufNewFile 2016*.md exec ":call JekyllMDHeader()"
-func JekyllMDHeader()
-    " set encoding=utf-8
+auto BufNewFile,BufRead *.md set encoding=utf-8 
+auto BufNewFile,BufRead *.md set filetype=makrdown 
+auto BufNewFile [0-9]\\\{4\}{-[0-9]\\\{2\}}\\\{2\}-*.md exec ":call JekyllMDHeader()"
+
+function JekyllMDHeader()
+    let typelen = 6
+    let cwd = getcwd()
+    let posttype = strpart(cwd, strlen(cwd)-typelen, typelen)
+    let category = "category: " . posttype
+
+    " if posttype == "读书"
+        " 
+    " elseif posttype == "技术"
+        "
+    " elseif posttype == "碎言"
+        "
+    " elseif postype == "私库"
+        " 
+    " elseif postype == "资源"
+        "
+    " else
+        " 
+    " endif
     call setline(1, "---")
     call append(1, "title: ")
     call append(2, "layout: post")
     call append(3, "author: WenfengShi")
-    call append(4, "category: 技术")
+    call append(4, category)
     call append(5, "tags: []")
     call append(6, "---")
-endfunc
+endfunction
 
-" Maximize the gvim initial window
+" Max the gvim window
 au GUIEnter * simalt ~x
 
 " set relativenumber
 set relativenumber
-

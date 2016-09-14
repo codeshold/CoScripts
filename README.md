@@ -22,4 +22,4 @@
 
 |Name|Functions|Notes|
 |:---:|:---:|:---:|
-|[my_vimrc](https://github.com/wenfengshi/CoScripts/blob/master/vim/my_vimrc)|个人vim配置文件（windows GVIM）供参考|my vimrc|
+|[my_vimrc](https://github.com/wenfengshi/CoScripts/blob/master/vim/my_vimrc)|个人vim配置文件（windows GVIM）: 1. 添加了jekyll markdown自动修改category功能|my vimrc|
