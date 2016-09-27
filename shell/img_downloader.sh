@@ -15,18 +15,20 @@ do
 done
 
 mkdir -p $directory;
-baseurl=$(echo $url | grep -e "https?://[a-z.]+")
+baseurl=${url%/*}
 
 echo Downloading $url
 curl -s $url | grep -o -e "<img src=[^>]*>" | 
 sed 's/<img src=\"\([^"]*\).*/\1/g' > /tmp/$$.list
 
-sed -i "s|^|$baseurl/|" /tmp/$$.list
+sed -i '.bak' "s|^/\{0,1\}|$baseurl/|" /tmp/$$.list
 
 cd $directory
+
+# exit 
 
 while read filename;
 do
     echo Downloading $filename
-    curl -s -o ./"$filename"
+    curl -s -O "$filename"
 done < /tmp/$$.list

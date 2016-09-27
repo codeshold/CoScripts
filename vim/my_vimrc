@@ -6,7 +6,7 @@ behave mswin
 " Use Vim settings, rather then Vi Settings(much better!)
 " This is be first, because it change other options as a side effect
 set nocompatible
-
+I
 " Enable syntax highlight
 syntax on
 
