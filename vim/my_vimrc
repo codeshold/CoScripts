@@ -6,7 +6,7 @@ behave mswin
 " Use Vim settings, rather then Vi Settings(much better!)
 " This is be first, because it change other options as a side effect
 set nocompatible
-I
+
 " Enable syntax highlight
 syntax on
 
@@ -125,15 +125,24 @@ auto BufNewFile,BufRead *.md set encoding=utf-8
 auto BufNewFile,BufRead *.md set filetype=makrdown 
 auto BufNewFile [0-9]\\\{4\}{-[0-9]\\\{2\}}\\\{2\}-*.md exec ":call JekyllMDHeader()"
 
+function MyURL()
+    let filename = expand('%:t')
+    let fileurl = "http://codeshold.me/" . tr(strpart(filename, 0, 8), '-', '/') . strpart(filename, 11)
+    let mylink = "> 原文链接: [codeshold.me link](" . fileurl . ")  "
+    return mylink
+endfunction
+
 function JekyllMDHeader()
     let typelen = 6
     let cwd = getcwd()
     let posttype = strpart(cwd, strlen(cwd)-typelen, typelen)
     let category = "category: " . posttype
+    "let fileurl = "http://codeshold.me/" . tr(strpart(filename, 0, 8), '-', '/') . strpart(filename, 11)
+    "let mylink = "> 原文链接: [codeshold.me link](" . fileurl . ")  "
 
     " if posttype == "读书"
         " 
-    " elseif posttype == "技术"
+    " elseif posttype == "技�?
         "
     " elseif posttype == "碎言"
         "
@@ -151,6 +160,7 @@ function JekyllMDHeader()
     call append(4, category)
     call append(5, "tags: []")
     call append(6, "---")
+    call append(7, MyURL())
 endfunction
 
 " Max the gvim window
