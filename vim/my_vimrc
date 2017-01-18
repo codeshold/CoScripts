@@ -126,9 +126,9 @@ auto BufNewFile,BufRead *.md set filetype=makrdown
 auto BufNewFile [0-9]\\\{4\}{-[0-9]\\\{2\}}\\\{2\}-*.md exec ":call JekyllMDHeader()"
 
 function MyURL()
-    let filename = expand('%:t')
-    let fileurl = "http://codeshold.me/" . tr(strpart(filename, 0, 8), '-', '/') . strpart(filename, 11)
-    let mylink = "> 原文链接: [codeshold.me link](" . fileurl . ")  "
+    let filename = substitute(expand('%:t'), "\.md", "\.html", "")
+    let fileurl = "http://codeshold.me/" . tr(strpart(filename, 0, 8), "-", "/") . strpart(filename, 11)
+    let mylink = "> 原文链接: [" . fileurl . "](" . fileurl . ")  "
     return mylink
 endfunction
 
@@ -137,8 +137,6 @@ function JekyllMDHeader()
     let cwd = getcwd()
     let posttype = strpart(cwd, strlen(cwd)-typelen, typelen)
     let category = "category: " . posttype
-    "let fileurl = "http://codeshold.me/" . tr(strpart(filename, 0, 8), '-', '/') . strpart(filename, 11)
-    "let mylink = "> 原文链接: [codeshold.me link](" . fileurl . ")  "
 
     " if posttype == "读书"
         " 
@@ -161,6 +159,7 @@ function JekyllMDHeader()
     call append(5, "tags: []")
     call append(6, "---")
     call append(7, MyURL())
+    call append(8, "")
 endfunction
 
 " Max the gvim window
