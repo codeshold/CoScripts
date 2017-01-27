@@ -23,7 +23,6 @@ curl -s $url | grep -o -e "<img src=[^>]*>" |
 sed 's/<img src=\"\([^"]*\).*/\1/g' > /tmp/$$.list
 
 sed -i '.bak' "s|^/\{0,1\}|$baseurl/|" /tmp/$$.list
-cp /tmp/$$.list .
 
 cd $directory
 
