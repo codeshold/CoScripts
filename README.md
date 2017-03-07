@@ -10,6 +10,9 @@
 |:---:|:---:|:---:|
 |[auto_set_ip.bat](https://github.com/wenfengshi/CoScripts/blob/master/batch/auto_set_ip.bat)| 自动设置IP地址（win7)|set IP address automatically (win7)|
 |[split_pcap.bat](https://github.com/wenfengshi/CoScripts/blob/master/batch/split_pcap.bat)|pcap/pcapng数据包自动切割（依赖wireshark）|split pcap/pcapng files(rely on wireshark|
+|[split_pcap.bat](https://github.com/wenfengshi/CoScripts/blob/master/batch/split_pcap.bat)|pcap/pcapng数据包自动切割（依赖wireshark）|split pcap/pcapng files(rely on wireshark|
+|vb_homework.bat|一个简单的自动处理VB作业的脚本（帮同学写的）||
+|shortcut_virus_remover.bat|U盘快捷键病毒恢复脚本|a simple usb_shortcut_virus remover script|
 
 ### shell
 
