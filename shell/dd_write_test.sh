@@ -3,13 +3,15 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+TEST_FILE_COUNT=2
+TEST_MIN_BLOCK_SIZE=512
+TEST_FILE_SIZE=$((5 * 1024 * 1024 * 1024))
+
 TEST_FILE=${1:-dd_write_test_file}
 
 TEST_FILE_EXISTS=0
 if [ -e "$TEST_FILE" ]; then TEST_FILE_EXISTS=1; fi
 
-# 5G (5 * 1024 * 1024 * 1024)
-TEST_FILE_SIZE=5368709120
 if [ $EUID -ne 0 ]; then
   echo "NOTE: Kernel cache will not be cleared between tests without sudo. This will likely cause inaccurate results." 1>&2
 fi
@@ -18,7 +20,7 @@ fi
 PRINTF_FORMAT="%8s : %s\n"
 printf "$PRINTF_FORMAT" "block size" "transfer rate"
 
-for (( BLOCK_SIZE=512, i=1; i <= 16; ++i, BLOCK_SIZE*=2 )); do
+for (( BLOCK_SIZE=$TEST_MIN_BLOCK_SIZE, i=1; i <= $TEST_FILE_COUNT; ++i, BLOCK_SIZE*=2 )); do
 
     # Calculate number of segments required to copy
     COUNT=$(($TEST_FILE_SIZE / $BLOCK_SIZE))
