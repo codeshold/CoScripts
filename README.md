@@ -7,7 +7,7 @@
 ### shell
 
 |Name|Functions|Notes|
-|:---:|:---:|:---:|
+|:---|:---|:---|
 |[FDU_login.sh](https://github.com/wenfengshi/CoScripts/blob/master/shell/FDU_login.sh)|复旦上网认证shell登录脚本||
 |[FDU_logout.sh](https://github.com/wenfengshi/CoScripts/blob/master/shell/FDU_logout.sh)|复旦上网认证shell退出脚本||
 |[dd_write_test.sh](https://github.com/wenfengshi/CoScripts/blob/master/shell/dd_write_test.sh)|写盘速度测试脚本||
@@ -19,7 +19,7 @@
 ### batch 
 
 |Name|Functions|Notes|
-|:---:|:---:|:---:|
+|:---|:---|:---|
 |[auto_set_ip.bat](https://github.com/wenfengshi/CoScripts/blob/master/batch/auto_set_ip.bat)| 自动设置IP地址（win7)|set IP address automatically (win7)|
 |[split_pcap.bat](https://github.com/wenfengshi/CoScripts/blob/master/batch/split_pcap.bat)|pcap/pcapng数据包自动切割（依赖wireshark）|split pcap/pcapng files(rely on wireshark|
 |[split_pcap.bat](https://github.com/wenfengshi/CoScripts/blob/master/batch/split_pcap.bat)|pcap/pcapng数据包自动切割（依赖wireshark）|split pcap/pcapng files(rely on wireshark|
@@ -30,7 +30,7 @@
 ## regedit
 
 |Name|Functions|Notes|
-|:---:|:---:|:---:|
+|:---|:---|:---|
 |Add Bash to Your Context Menu.reg|||
 |Remove Bash From Your Context Menu.reg|||
 
@@ -38,5 +38,5 @@
 ### vim
 
 |Name|Functions|Notes|
-|:---:|:---:|:---:|
+|:---|:---|:---|
 |[my_vimrc](https://github.com/wenfengshi/CoScripts/blob/master/vim/my_vimrc)|个人vim配置文件（windows GVIM）: 1. 添加了jekyll markdown自动修改category功能|my vimrc|
