@@ -1,3 +1,5 @@
+# gcc -O2 -Wall proxyd.c -o proxyd -lpthread
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
