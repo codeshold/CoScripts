@@ -154,3 +154,14 @@ au GUIEnter * simalt ~x
 
 " set relativenumber
 set relativenumber
+
+
+
+set encoding=utf-8
+
+set directory-=.
+" set swapfile
+set undodir-=.
+" set undofile
+set backupdir-=.
+" set backup
