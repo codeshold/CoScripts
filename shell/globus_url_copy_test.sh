@@ -1,11 +1,21 @@
 #/bin/bash
-#set -e
 
-DELAY_SECOND=5
-COUNT_400G=4
-COPYLOG="/home/testfile/copy_${COUNT_400G}x400G_${DELAY_SECOND}.log"
-DELLOG="/home/testfile/rm_${COUNT_400G}x400G_${DELAY_SECOND}.log"
-IFPPSLOG="/home/testfile/ifpps_${COUNT_400G}x400G_${DELAY_SECOND}.log"
+set -e
+
+trap 'myexit' INT QUIT TERM
+ 
+## 总传输文件的大小为 4*400GB==1600GB
+## 总传输文件的大小为 40*400GB==16TB
+DELAY_MS=5
+PARALLELISM=2
+COUNT_400G=20
+IFPPS_SECOND=10
+
+CURDAY=$(date +%m%d_%H%M)
+POSTFIX="${CURDAY}_${COUNT_400G}x400G_${DELAY_MS}ms_${PARALLELISM}para.log"
+COPYLOG="/home/testfile/copy_${POSTFIX}"
+DELLOG="/home/testfile/rm_${POSTFIX}"
+IFPPSLOG="/home/testfile/ifpps_${POSTFIX}"
 
 # gen_test_file one
 function gen_test_file() {
@@ -18,7 +28,7 @@ function gen_test_file() {
 function start_transfer() {
     echo "    globus-url-copy $1 file start!    "
     begintime=`date +%s`
-    globus-url-copy -r -p 2 gsiftp://gf02.863/home/testfile/$1/ file:///home/testfile/$1/
+    globus-url-copy -r -p $PARALLELISM gsiftp://gf02.863/home/testfile/$1/ file:///home/testfile/$1/
     endtime=`date +%s`
     echo "    globus-url-copy $i file end!    "
     echo $(($endtime-$begintime)) >> $COPYLOG
@@ -30,28 +40,44 @@ function del_files() {
     rm -rf /home/testfile/$i/*
     endtime=`date +%s`
     echo "    rm $i file end!    "
-    echo $(($endtime-$begintime)) >> $DELLOG
+    echo "    $(($endtime-$begintime))" #>> $DELLOG
+}
+
+function myexit(){
+    sleep 2
+    pids=$(ps aux | grep ifpps | grep ${DELAY_MS} | grep -v grep | awk '{print $2}')
+    [ ! -z "$pids" ] && (echo $pids | xargs kill -s 9)
+    tc qdisc del dev p5p2 root netem delay ${DELAY_MS}ms
+    echo "    myexit!!!    "
+}
+
+function init_file(){
+    rm -rf /home/testfile/one/*
+    rm -rf /home/testfile/two/*
+    rm -rf $COPYLOG
+    rm -rf $IFPPSLOG
+    mkdir -p /home/testfile/one
+    mkdir -p /home/testfile/two
 }
 
 ###### main #####
-## 总传输文件的大小为 4*400GB==1600GB
-## 总传输文件的大小为 40*400GB==16TB
 
-echo "" > $COPYLOG
+init_file
 
-# 10S统计一次
-ifpps -lcd p5p2 -t 10000 > $IFPPSLOG &
+ifpps -lcd p5p2 -t "${IFPPS_SECOND}000" > $IFPPSLOG &
 IFPPS_PID=$!
+echo "    $IFPPS_PID    "
 
 # 时延设置
-tc qdisc del dev p5p2 root netem delay ${DELAY_SECOND}ms &> /dev/null
-tc qdisc add dev p5p2 root netem delay ${DELAY_SECOND}ms
+tc qdisc add dev p5p2 root netem delay ${DELAY_MS}ms
 
-rm -rf /home/testfile/one/*
-rm -rf /home/testfile/two/*
-mkdir -p /home/testfile/one
-mkdir -p /home/testfile/two
 
+# 获取证书
+declare -x MYPROXY_SERVER_DN="/O=Grid/OU=GlobusTest/OU=simpleCA-gf02.863/CN=host/gf02.863"
+echo "111111" | myproxy-logon -s gf02 -l quser -S
+
+echo "*****************"
+date
 for i in `seq 1 $COUNT_400G`; do
     #is_even=$(($i%2))
     if [ $(($i%2)) -eq 1 ]; then
@@ -62,23 +88,24 @@ for i in `seq 1 $COUNT_400G`; do
         del="one"
     fi
     echo "=== [ $i ] current trans: $trans, del: $del START!!! === "
+    del_files $del &
     start_transfer $trans
-    del_files $del
     # wait
     echo "=== [ $i ] current trans: $trans, del: $del END!!! === "
 done
+date
+echo "****************"
 
-kill -s 9 $IFPPS_PID
+myexit
 echo "=== !!! END!!! === "
 
-# head -n 10 ifpps_4x400G_5.log | cut -d " " -f 1-3
+
 
 # for i in {1..4};do dd if=/dev/zero of=./100GB.$i.file count=100 bs=1GB; done
 # dd if=/dev/zero of=./1GB.file count=1 bs=1GB
 # time globus-url-copy gsiftp://gf02.863/etc/group file:///home/test
 # globus-url-copy -r gsiftp://gf02.863/home/testfile file:///home/testfile/
 
-# REF http://codeshold.me/2017/01/tc_inro.html
 # tc qdisc add dev p5p2 root netem delay 10ms 2ms 30%
 # tc qdisc add dev p5p2 root netem delay 10ms 10ms
 # tc qdisc del dev p5p2 root netem delay 10ms
