@@ -1,3 +1,5 @@
+> 技术交流QQ群: **635806352**（加群请备注仓库链接）
+
 # CoScripts
 **common scripts** &amp;&amp; **useful scripts** (*including shell, batch, python, js, vim etc.*)
 
